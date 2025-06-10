@@ -28,7 +28,8 @@ def login():
     with open(users_file, 'w') as f:
         json.dump(users, f, indent=4)
     print(f"Username: {username}, Password (hashed): {hashed_password}")
-    return f"User {username} registered successfully!"
+    # Redirect to warrantyReg.html after successful registration
+    return render_template('warrantyReg.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
