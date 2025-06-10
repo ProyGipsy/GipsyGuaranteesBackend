@@ -56,7 +56,6 @@ def warranty():
     # Prepare warranty data
     warranty_data = {
         "username": username,
-        "password": password,  # This is the hashed password
         "product": product,
         "serial_number": serial_number,
         "purchase_date": purchase_date,
