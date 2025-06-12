@@ -5,10 +5,27 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Send data to Flask backend using fetch or axios
-    console.log({ username, password });
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Login successful!');
+        // You can redirect or store token here
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    } catch (error) {
+      alert('Error connecting to server');
+      console.error('Error:', error);
+    }
   };
 
   return (
