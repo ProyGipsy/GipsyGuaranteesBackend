@@ -24,7 +24,7 @@ function Login() {
       }
     } catch (error) {
       alert('Error connecting to server');
-      console.error('Error:', error);
+      // Do not log sensitive data
     }
   };
 
