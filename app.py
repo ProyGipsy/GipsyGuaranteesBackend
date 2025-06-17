@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash
 import json
@@ -13,8 +13,11 @@ def home():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form['username']
-    password = request.form['password']
+    data = request.get_json()
+    if not data or 'username' not in data or 'password' not in data:
+        return jsonify({'message': 'Missing username or password'}), 400
+    username = data['username']
+    password = data['password']
     hashed_password = generate_password_hash(password)
     user_data = {"username": username, "password": hashed_password}
     users_file = 'users.json'
@@ -29,8 +32,7 @@ def login():
     users.append(user_data)
     with open(users_file, 'w') as f:
         json.dump(users, f, indent=4)
-    print(f"Username: {username}, Password (hashed): {hashed_password}")
-    return f"User {username} registered successfully!"
+    return jsonify({'message': f'User {username} registered successfully!'}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
