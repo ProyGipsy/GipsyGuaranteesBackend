@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Garantia</title>
+    <title>Registro de Garantía</title>
     <link rel="stylesheet" href="/static/css/warrantyStyle.css">
 </head>
 <body>
     <h1>Registro de Garantía</h1>
     <form action="/submitWarranty" method="POST">
-        <label for="barCode">Codigo de Barras:</label>
+        <label for="barCode">Código de Barras:</label>
         <input type="text" id="barCode" name="barCode" required>
         <br><br>
 
@@ -17,21 +17,26 @@
         <input type="date" id="purchaseDate" name="purchaseDate" required>
         <br><br>
 
-        <label for="storeName">Tienda donde compro el producto</label>
+        <label for="storeName">Tienda donde compró el producto:</label>
         <select id="storeName" name="storeName" required>
             <option value="">Escoge una tienda</option>
-            <option value="StoreA">Store A</option>
-            <option value="StoreB">Store B</option>
-            <option value="StoreC">Store C</option>
+            <option value="StoreA">Opción 1</option>
+            <option value="StoreB">Opción 2</option>
+            <option value="StoreC">Opción 3</option>
         </select>
         <br><br>
 
-        <label for="storeAddress">Direccion de la sucursal:</label>
-        <input type="text" id="storeAddress" name="storeAddress" required>
+        <label for="storeAddress">Dirección de la sucursal:</label>
+        <select id="storeAddress" name="storeAddress" required>
+            <option value="">Escoge una dirección</option>
+            <option value="StoreA">Dirección 1</option>
+            <option value="StoreB">Dirección 2</option>
+            <option value="StoreC">Dirección 3</option>
+        </select>
         <br><br>
 
         <label for="invoiceNumber">Factura del producto:</label>
-        <input type="text" id="invoiceNumber" name="invoiceNumber" required>
+        <input type="file" id="invoiceNumber" name="invoiceNumber" accept="image/*" required>
         <br><br>
 
         <button type="submit">Guardar Garantía</button>

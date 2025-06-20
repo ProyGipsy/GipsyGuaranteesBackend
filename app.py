@@ -77,5 +77,49 @@ def warranty():
     print(f"Warranty info stored for user: {username}")
     return "Warranty information submitted successfully!"
 
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+@app.route('/submitRegistration', methods=['POST'])
+def submit_registration():
+    # Get form data
+    first_name = request.form.get('firstName')
+    last_name = request.form.get('lastName')
+    email = request.form.get('email')
+    address = request.form.get('address')
+    password = request.form.get('password')
+    confirm_password = request.form.get('confirmPassword')
+
+    # Simple password confirmation check
+    if password != confirm_password:
+        return "Passwords do not match!", 400
+
+    # Hash the password
+    hashed_password = generate_password_hash(password)
+
+    # Prepare user data
+    user_data = {
+        "first_name": first_name,
+        "last_name": last_name,
+        "email": email,
+        "address": address,
+        "password": hashed_password
+    }
+
+    users_file = 'users.json'
+    if os.path.exists(users_file):
+        with open(users_file, 'r') as f:
+            try:
+                users = json.load(f)
+            except json.JSONDecodeError:
+                users = []
+    else:
+        users = []
+    users.append(user_data)
+    with open(users_file, 'w') as f:
+        json.dump(users, f, indent=4)
+    return redirect(url_for('home'))
+
 if __name__ == '__main__':
     app.run(debug=True)
