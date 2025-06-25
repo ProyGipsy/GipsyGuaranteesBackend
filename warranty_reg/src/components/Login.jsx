@@ -19,8 +19,8 @@ function Login() {
       });
       const data = await response.json();
       if (response.ok) {
-        alert('Login successful!');
-        // You can redirect or store token here
+        // Redirect to warranty page on successful login
+        navigate('/warranty');
       } else {
         alert(data.message || 'Login failed');
       }
