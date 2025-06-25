@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/loginStyle.css';
 
 function Register() {
@@ -10,6 +11,7 @@ function Register() {
     password: '',
     confirmPassword: ''
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,7 +31,7 @@ function Register() {
       });
       if (response.ok) {
         alert('Registration successful!');
-        // Optionally redirect to login
+        navigate('/'); // Redirect to login page
       } else {
         const data = await response.json();
         alert(data.message || 'Registration failed');

@@ -14,5 +14,16 @@
     {
         "username": "ad",
         "password": "scrypt:32768:8:1$J3hTznqLPUqktvGK$02ed913df97f8b6d408e1cdacc4a06349f097084b07feca64e7d92bdbcc51e045982097779ca7b87404a9316775faa5440d249b0828e1e09f6a511a40c19b2ee"
+    },
+    {
+        "first_name": "nombre",
+        "last_name": "apellido",
+        "email": "email@test.com",
+        "address": "",
+        "password": "scrypt:32768:8:1$rutOy2w21gLLV8OV$42526611c868ffeb144ddf6d89970dc9f2ce4c73402f08b5edf06e6e2568e8c318804c8e902247b5b9abc4f0983f0b04473fe89d5d8915fc2010c9fe0d5c9235"
+    },
+    {
+        "username": "nombre",
+        "password": "scrypt:32768:8:1$6WPiO1NFgdkPIH7b$1a6820627ed92c8be1436620ad57e8b23afa730bb69fee05d292652fc93c02e1f26b932c21195d327c19d8b6fe181a89dc194d6e0990f73b0f4e17228c422f41"
     }
 ]
