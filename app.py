@@ -1,10 +1,21 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, request, session, redirect, url_for
 from werkzeug.security import generate_password_hash
 import json
+=======
+>>>>>>> test
 import os
+import json
+from flask_cors import CORS
+from werkzeug.security import generate_password_hash
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
+<<<<<<< HEAD
 app.secret_key = 'your_secret_key_here'  # Replace with a strong secret key
+=======
+CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:5173"])
+>>>>>>> test
 
 @app.route('/')
 def home():
@@ -12,8 +23,11 @@ def home():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form['username']
-    password = request.form['password']
+    data = request.get_json()
+    if not data or 'username' not in data or 'password' not in data:
+        return jsonify({'message': 'Missing username or password'}), 400
+    username = data['username']
+    password = data['password']
     hashed_password = generate_password_hash(password)
     user_data = {"username": username, "password": hashed_password}
     users_file = 'users.json'
@@ -28,6 +42,7 @@ def login():
     users.append(user_data)
     with open(users_file, 'w') as f:
         json.dump(users, f, indent=4)
+<<<<<<< HEAD
     print(f"Username: {username}, Password (hashed): {hashed_password}")
     # Store username and hashed_password in session
     session['username'] = username
@@ -120,6 +135,10 @@ def submit_registration():
     with open(users_file, 'w') as f:
         json.dump(users, f, indent=4)
     return redirect(url_for('home'))
+=======
+    return jsonify({'message': f'User {username} registered successfully!'}), 200
+
+>>>>>>> test
 
 if __name__ == '__main__':
     app.run(debug=True)
