@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './styles/loginStyle.css';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +53,7 @@ function Login() {
         <button type="submit">Iniciar Sesión</button>
       </form>
       <p>
-        ¿No tienes una cuenta? <a href="/register">Regístrate</a>
+        ¿No tienes una cuenta? <button type="button" onClick={() => navigate('/register')}>Regístrate</button>
       </p>
     </div>
   );
