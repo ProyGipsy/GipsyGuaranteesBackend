@@ -53,7 +53,7 @@ function Login() {
         <button type="submit">Iniciar Sesión</button>
       </form>
       <p>
-        ¿No tienes una cuenta? <button type="button" onClick={() => navigate('/register')}>Regístrate</button>
+        ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/register'); }}>Regístrate</a>
       </p>
     </div>
   );
