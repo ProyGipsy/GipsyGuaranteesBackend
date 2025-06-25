@@ -34,5 +34,6 @@ def login():
         json.dump(users, f, indent=4)
     return jsonify({'message': f'User {username} registered successfully!'}), 200
 
+
 if __name__ == '__main__':
     app.run(debug=True)
