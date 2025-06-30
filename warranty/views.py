@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 import json
 
 # Create your views here.
@@ -23,3 +26,26 @@ def login(request):
         return JsonResponse({'message': f'User {username} logged in successfully!'})
     else:
         return JsonResponse({'message': 'Invalid credentials'}, status=401)
+
+@csrf_exempt
+@require_POST
+def submit_registration(request):
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({'message': 'Invalid JSON'}, status=400)
+    required_fields = ['firstName', 'lastName', 'email', 'password']
+    if not data or not all(field in data and data[field] for field in required_fields):
+        return JsonResponse({'message': 'Missing required registration fields'}, status=400)
+    # Check if user already exists by email
+    if User.objects.filter(email=data['email']).exists():
+        return JsonResponse({'message': 'User with this email already exists'}, status=400)
+    # Create new user
+    user = User.objects.create(
+        username=data['email'],
+        first_name=data['firstName'],
+        last_name=data['lastName'],
+        email=data['email'],
+        password=make_password(data['password'])
+    )
+    return JsonResponse({'message': f"User {data['email']} registered successfully!"}, status=200)
