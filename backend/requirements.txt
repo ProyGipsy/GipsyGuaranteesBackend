@@ -1,5 +1,0 @@
-Django
-djangorestframework
-pyodbc
-django-pyodbc-azure
-```
