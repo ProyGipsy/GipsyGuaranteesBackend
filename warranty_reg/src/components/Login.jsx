@@ -55,6 +55,9 @@ function Login() {
       <p>
         ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/register'); }}>Regístrate</a>
       </p>
+      <p>
+        <a href="#" onClick={e => { e.preventDefault(); navigate('/forgot-password'); }}>¿Olvidaste tu contraseña?</a>
+      </p>
     </div>
   );
 }
