@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from .models import Warranty
 import json
 
 # Create your views here.
@@ -49,3 +50,25 @@ def submit_registration(request):
         password=make_password(data['password'])
     )
     return JsonResponse({'message': f"User {data['email']} registered successfully!"}, status=200)
+
+@csrf_exempt
+@require_POST
+def register_warranty(request):
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({'message': 'Invalid JSON'}, status=400)
+    required_fields = ['username', 'product', 'serial_number', 'purchase_date']
+    if not data or not all(field in data and data[field] for field in required_fields):
+        return JsonResponse({'message': 'Missing required warranty fields'}, status=400)
+    try:
+        user = User.objects.get(username=data['username'])
+    except User.DoesNotExist:
+        return JsonResponse({'message': 'User does not exist'}, status=404)
+    warranty = Warranty.objects.create(
+        user=user,
+        product=data['product'],
+        serial_number=data['serial_number'],
+        purchase_date=data['purchase_date']
+    )
+    return JsonResponse({'message': 'Warranty registered successfully!'}, status=201)
