@@ -7,6 +7,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from .models import Warranty
 import json
+from django.core.mail import send_mail
+from django.conf import settings
+import secrets
 
 # Create your views here.
 
@@ -72,3 +75,50 @@ def register_warranty(request):
         purchase_date=data['purchase_date']
     )
     return JsonResponse({'message': 'Warranty registered successfully!'}, status=201)
+
+@csrf_exempt
+@require_POST
+def change_password(request):
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({'message': 'Invalid JSON'}, status=400)
+    username = data.get('username')
+    old_password = data.get('old_password')
+    new_password = data.get('new_password')
+    if not username or not old_password or not new_password:
+        return JsonResponse({'message': 'Missing required fields'}, status=400)
+    user = authenticate(username=username, password=old_password)
+    if user is None:
+        return JsonResponse({'message': 'Invalid username or password'}, status=401)
+    user.password = make_password(new_password)
+    user.save()
+    return JsonResponse({'message': 'Password changed successfully!'}, status=200)
+
+@csrf_exempt
+@require_POST
+def forgot_password(request):
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({'message': 'Invalid JSON'}, status=400)
+    email = data.get('email')
+    if not email:
+        return JsonResponse({'message': 'Missing email'}, status=400)
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return JsonResponse({'message': 'No user with this email'}, status=404)
+    # Generate a temporary password
+    temp_password = secrets.token_urlsafe(8)
+    user.password = make_password(temp_password)
+    user.save()
+    # Send email with the temporary password
+    send_mail(
+        'Password Reset',
+        f'Your temporary password is: {temp_password}',
+        settings.DEFAULT_FROM_EMAIL,
+        [email],
+        fail_silently=True,
+    )
+    return JsonResponse({'message': 'Temporary password sent to your email.'}, status=200)
