@@ -78,3 +78,5 @@ STATIC_URL = '/static/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@example.com'
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
