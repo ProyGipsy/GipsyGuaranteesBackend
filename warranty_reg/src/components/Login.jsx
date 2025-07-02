@@ -10,7 +10,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://localhost:8000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,6 +54,9 @@ function Login() {
       </form>
       <p>
         ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/register'); }}>Regístrate</a>
+      </p>
+      <p>
+        <a href="#" onClick={e => { e.preventDefault(); navigate('/forgot-password'); }}>¿Olvidaste tu contraseña?</a>
       </p>
     </div>
   );
