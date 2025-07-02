@@ -10,7 +10,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/login', {
+      const response = await fetch('http://localhost:8000/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ function Login() {
       const data = await response.json();
       if (response.ok) {
         // Redirect to warranty page on successful login
-        navigate('/warranty');
+        navigate('/warranty/');
       } else {
         alert(data.message || 'Login failed');
       }
@@ -53,10 +53,10 @@ function Login() {
         <button type="submit">Iniciar Sesión</button>
       </form>
       <p>
-        ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/register'); }}>Regístrate</a>
+        ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/register/'); }}>Regístrate</a>
       </p>
       <p>
-        <a href="#" onClick={e => { e.preventDefault(); navigate('/forgot-password'); }}>¿Olvidaste tu contraseña?</a>
+        <a href="#" onClick={e => { e.preventDefault(); navigate('/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
       </p>
     </div>
   );

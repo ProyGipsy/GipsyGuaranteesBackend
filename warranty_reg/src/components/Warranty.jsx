@@ -26,7 +26,7 @@ function Warranty() {
       if (value !== null) formData.append(key, value);
     });
     try {
-      const response = await fetch('http://localhost:8000/submitWarranty', {
+      const response = await fetch('http://localhost:8000/registerWarranty/', {
         method: 'POST',
         body: formData
       });
