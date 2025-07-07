@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ChangePassword = () => {
   const [username, setUsername] = useState('');
@@ -6,6 +7,12 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('session_token');
+    if (!token) navigate('/login');
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,7 +21,10 @@ const ChangePassword = () => {
     try {
       const response = await fetch('http://localhost:8000/changePassword/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('session_token')}`,
+        },
         body: JSON.stringify({
           username,
           old_password: oldPassword,

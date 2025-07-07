@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('session_token');
+    if (!token) navigate('/login');
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -12,7 +19,10 @@ const ForgotPassword = () => {
     try {
       const response = await fetch('http://localhost:8000/forgotPassword/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('session_token')}`,
+        },
         body: JSON.stringify({ email }),
       });
       const data = await response.json();

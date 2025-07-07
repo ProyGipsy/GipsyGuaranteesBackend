@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/loginStyle.css';
 
@@ -11,7 +11,13 @@ function Register() {
     password: '',
     confirmPassword: ''
   });
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('session_token');
+    if (!token) navigate('/login');
+  }, [navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,6 +25,7 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
     if (form.password !== form.confirmPassword) {
       alert('Las contraseñas deben coincidir.');
       return;
@@ -26,18 +33,22 @@ function Register() {
     try {
       const response = await fetch('http://localhost:8000/submitRegistration/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('session_token')}`,
+        },
         body: JSON.stringify(form)
       });
+      const data = await response.json();
       if (response.ok) {
+        setMessage(data.message);
         alert('Registration successful!');
         navigate('/'); // Redirect to login page
       } else {
-        const data = await response.json();
-        alert(data.message || 'Registration failed');
+        setMessage(data.message || 'Registration failed');
       }
     } catch (error) {
-      alert('Error connecting to server');
+      setMessage('Error connecting to server');
     }
   };
 
@@ -94,6 +105,7 @@ function Register() {
         />
         <button type="submit">Registrarse</button>
       </form>
+      {message && <p>{message}</p>}
     </div>
   );
 }
