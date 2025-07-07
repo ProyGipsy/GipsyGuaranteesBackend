@@ -10,6 +10,8 @@ import json
 from django.core.mail import send_mail
 from django.conf import settings
 import secrets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
 # Create your views here.
 
@@ -32,7 +34,8 @@ def login(request):
         return JsonResponse({'message': 'Invalid credentials'}, status=401)
 
 @csrf_exempt
-@require_POST
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def submit_registration(request):
     try:
         data = json.loads(request.body)
@@ -55,7 +58,8 @@ def submit_registration(request):
     return JsonResponse({'message': f"User {data['email']} registered successfully!"}, status=200)
 
 @csrf_exempt
-@require_POST
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def register_warranty(request):
     try:
         data = json.loads(request.body)
@@ -77,7 +81,8 @@ def register_warranty(request):
     return JsonResponse({'message': 'Warranty registered successfully!'}, status=201)
 
 @csrf_exempt
-@require_POST
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def change_password(request):
     try:
         data = json.loads(request.body)
