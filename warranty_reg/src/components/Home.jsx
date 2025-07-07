@@ -5,7 +5,6 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Example: check for a token in localStorage (adjust as needed for your auth logic)
     const token = localStorage.getItem('session_token');
     if (!token) {
       navigate('/login');

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/loginStyle.css';
 
 function Warranty() {
@@ -9,6 +10,13 @@ function Warranty() {
     storeAddress: '',
     invoiceNumber: null
   });
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('session_token');
+    if (!token) navigate('/login');
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -21,23 +29,28 @@ function Warranty() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => {
       if (value !== null) formData.append(key, value);
     });
     try {
-      const response = await fetch('http://localhost:8000/submitWarranty', {
+      const response = await fetch('http://localhost:8000/registerWarranty/', {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('session_token')}`,
+        },
         body: formData
       });
+      const data = await response.json();
       if (response.ok) {
-        alert('¡Garantía guardada exitosamente!');
+        setMessage('¡Garantía guardada exitosamente!');
         // Optionally reset form or redirect
       } else {
-        alert('Error al guardar la garantía');
+        setMessage(data.message || 'Error al guardar la garantía');
       }
     } catch (error) {
-      alert('Error de conexión con el servidor');
+      setMessage('Error de conexión con el servidor');
     }
   };
 
@@ -105,6 +118,7 @@ function Warranty() {
         <br /><br />
         <button type="submit">Guardar Garantía</button>
       </form>
+      {message && <p>{message}</p>}
     </div>
   );
 }

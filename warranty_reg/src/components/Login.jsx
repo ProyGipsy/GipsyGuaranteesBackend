@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/loginStyle.css';
 
@@ -7,10 +7,17 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // If already logged in, redirect to home page
+    if (localStorage.getItem('session_token')) {
+      navigate('/home');
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/login', {
+      const response = await fetch('http://localhost:8000/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -18,15 +25,14 @@ function Login() {
         body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
-      if (response.ok) {
-        // Redirect to warranty page on successful login
+      if (response.ok && data.access) {
+        localStorage.setItem('session_token', data.access);
         navigate('/warranty');
       } else {
-        alert(data.message || 'Login failed');
+        alert(data.detail || data.message || 'Login failed');
       }
     } catch (error) {
       alert('Error connecting to server');
-      // Do not log sensitive data
     }
   };
 
