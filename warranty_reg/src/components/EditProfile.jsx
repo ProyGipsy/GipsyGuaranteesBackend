@@ -5,6 +5,7 @@ import '../styles/styles.css';
 const EditProfile = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({ firstName: '', lastName: '', email: '', address: '' });
+  const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' });
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -25,6 +26,10 @@ const EditProfile = () => {
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  const handlePasswordChange = (e) => {
+    setPasswords({ ...passwords, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -51,8 +56,44 @@ const EditProfile = () => {
     }
   };
 
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    const token = localStorage.getItem('session_token');
+    try {
+      const response = await fetch('http://localhost:8000/changePassword/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          username: user.email,
+          old_password: passwords.oldPassword,
+          new_password: passwords.newPassword,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setMessage('Contraseña cambiada correctamente.');
+        setPasswords({ oldPassword: '', newPassword: '' });
+      } else {
+        setMessage(data.message || 'Error al cambiar la contraseña.');
+      }
+    } catch (error) {
+      setMessage('Error de conexión con el servidor.');
+    }
+  };
+
   return (
     <div className="cardContainer">
+    <button
+        className="backArrow"
+        onClick={() => navigate('/home')}
+        aria-label="Volver"
+    >
+        {'<'}
+    </button>
       <h2>Editar Perfil</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -86,10 +127,29 @@ const EditProfile = () => {
           value={user.address || ''}
           onChange={handleChange}
         />
-        <button type="submit">Guardar cambios</button>
+      </form>
+      <h2>Cambiar contraseña</h2>
+      <form onSubmit={handlePasswordSubmit}>
+        <input
+          type="password"
+          name="oldPassword"
+          placeholder="Contraseña actual"
+          value={passwords.oldPassword}
+          onChange={handlePasswordChange}
+          required
+        />
+        <input
+          type="password"
+          name="newPassword"
+          placeholder="Nueva contraseña"
+          value={passwords.newPassword}
+          onChange={handlePasswordChange}
+          required
+        />
+        <button type="submit">Cambiar contraseña</button>
       </form>
       {message && <p>{message}</p>}
-      <button className="appButton" onClick={() => navigate('/home')}>Volver</button>
+      <button type="submit">Guardar cambios</button>
     </div>
   );
 };
