@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/loginStyle.css';
+import '../styles/styles.css';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -37,7 +37,7 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
+    <div className="cardContainer">
       <h2>Registro de Garantías</h2>
       <form onSubmit={handleSubmit}>
         <input

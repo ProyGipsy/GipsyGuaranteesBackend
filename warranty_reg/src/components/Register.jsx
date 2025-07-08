@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/loginStyle.css';
+import '../styles/styles.css';
 
 function Register() {
   const [form, setForm] = useState({
@@ -48,7 +48,7 @@ function Register() {
   };
 
   return (
-    <div className="login-container">
+    <div className="cardContainer">
       <h2>Registro de usuario</h2>
       <form onSubmit={handleSubmit}>
         <input

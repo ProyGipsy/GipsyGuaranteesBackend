@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/styles.css';
 
 const ChangePassword = () => {
   const [username, setUsername] = useState('');
@@ -45,7 +46,7 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="change-password-container">
+    <div className="cardContainer">
       <h2>Change Password</h2>
       <form onSubmit={handleSubmit}>
         <div>

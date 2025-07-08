@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/styles.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +35,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="forgot-password-container">
+    <div className="cardContainer">
       <h2>Recuperar Contraseña</h2>
       <form onSubmit={handleSubmit}>
         <div>

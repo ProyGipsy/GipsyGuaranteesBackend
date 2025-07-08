@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/loginStyle.css';
+import '../styles/styles.css';
 
 function Warranty() {
   const [form, setForm] = useState({
@@ -55,7 +55,7 @@ function Warranty() {
   };
 
   return (
-    <div className="login-container">
+    <div className="cardContainer">
       <h2>Registro de Garantía</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <label htmlFor="barCode">Código de Barras:</label>
