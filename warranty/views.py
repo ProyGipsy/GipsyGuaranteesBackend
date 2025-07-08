@@ -14,6 +14,16 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 
 # Create your views here.
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_user(request):
+    user = request.user
+    return JsonResponse({
+        "username": user.username,
+        "firstName": user.first_name,
+        "lastName": user.last_name,
+        "email": user.email,
+    })
 
 @csrf_exempt
 def login(request):

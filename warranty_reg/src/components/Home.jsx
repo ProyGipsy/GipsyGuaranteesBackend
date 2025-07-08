@@ -5,12 +5,23 @@ import '../styles/styles.css';
 const Home = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('session_token');
     if (!token) {
       navigate('/login');
+      return;
     }
+    // Fetch user info
+    fetch('http://localhost:8000/current_user/', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+      .then(res => res.json())
+      .then(data => setUser(data))
+      .catch(() => setUser(null));
   }, [navigate]);
 
   const handleLogout = () => {
@@ -32,7 +43,7 @@ const Home = () => {
         )}
       </div>
       <div className="cardContainer">
-        <h1>Bienvenido a la página principal</h1>
+        <h2>Bienvenido, {user ? user.firstName : ''}</h2>
         <p>¡Has iniciado sesión correctamente!</p>
         <button className="appButton" onClick={() => navigate('/warranty')}>
           Registrar nueva garantía

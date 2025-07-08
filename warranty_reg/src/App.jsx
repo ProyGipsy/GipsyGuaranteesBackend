@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import Warranty from './components/Warranty';
+import EditProfile from './components/EditProfile';
 import ChangePassword from './components/ChangePassword';
 import ForgotPassword from './components/ForgotPassword';
 
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/warranty" element={<Warranty />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
