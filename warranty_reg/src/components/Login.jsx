@@ -27,7 +27,7 @@ function Login() {
       const data = await response.json();
       if (response.ok && data.access) {
         localStorage.setItem('session_token', data.access);
-        navigate('/warranty');
+        navigate('/');
       } else {
         alert(data.detail || data.message || 'Login failed');
       }

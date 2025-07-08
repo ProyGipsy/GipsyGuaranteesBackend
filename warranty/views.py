@@ -35,7 +35,6 @@ def login(request):
 
 @csrf_exempt
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def submit_registration(request):
     try:
         data = json.loads(request.body)

@@ -14,10 +14,6 @@ function Register() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('session_token');
-    if (!token) navigate('/login');
-  }, [navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,7 +31,6 @@ function Register() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('session_token')}`,
         },
         body: JSON.stringify(form)
       });
@@ -43,7 +38,7 @@ function Register() {
       if (response.ok) {
         setMessage(data.message);
         alert('Registration successful!');
-        navigate('/'); // Redirect to login page
+        navigate('/login'); // Redirect to login page
       } else {
         setMessage(data.message || 'Registration failed');
       }

@@ -7,11 +7,6 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('session_token');
-    if (!token) navigate('/login');
-  }, [navigate]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
