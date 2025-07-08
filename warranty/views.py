@@ -23,6 +23,7 @@ def current_user(request):
         "firstName": user.first_name,
         "lastName": user.last_name,
         "email": user.email,
+        "is_staff": user.is_staff,
     })
 
 @csrf_exempt

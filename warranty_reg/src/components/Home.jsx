@@ -26,6 +26,7 @@ const Home = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('session_token');
+    localStorage.removeItem('refresh_token');
     navigate('/login');
   };
 
@@ -45,9 +46,16 @@ const Home = () => {
       <div className="cardContainer">
         <h2>Bienvenido, {user ? user.firstName : ''}</h2>
         <p>¡Has iniciado sesión correctamente!</p>
+        <div style={{ display: 'flex', gap: '12px', flexDirection: 'row' }}>
         <button className="appButton" onClick={() => navigate('/warranty')}>
           Registrar nueva garantía
         </button>
+        {user && user.is_staff && (
+          <button className="appButton" onClick={() => navigate('/servicio-tecnico')}>
+            Servicio técnico
+          </button>
+        )}
+        </div>
       </div>
     </div>
   );
