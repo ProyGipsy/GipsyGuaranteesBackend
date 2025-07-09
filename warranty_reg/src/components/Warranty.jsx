@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
+import { fetchWithAuth } from '../fetchWithAuth';
+import { useSessionTimeout } from '../useSessionTimeout';
+import SessionModal from './SessionModal';
 
 function Warranty() {
   const [form, setForm] = useState({
@@ -35,7 +38,7 @@ function Warranty() {
       if (value !== null) formData.append(key, value);
     });
     try {
-      const response = await fetch('http://localhost:8000/registerWarranty/', {
+      const response = await fetchWithAuth('http://localhost:8000/registerWarranty/', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('session_token')}`,
@@ -52,9 +55,24 @@ function Warranty() {
     } catch (error) {
       setMessage('Error de conexión con el servidor');
     }
+  };  
+
+  const handleLogout = () => {
+    localStorage.removeItem('session_token');
+    localStorage.removeItem('refresh_token');
+    navigate('/login');
   };
+  const [showSessionModal, setShowSessionModal] = useSessionTimeout(handleLogout);
 
   return (
+    <>
+      {showSessionModal && (
+        <SessionModal
+          onRefresh={() => { window.location.reload(); setShowSessionModal(false); }}
+          onLogout={handleLogout}
+          onClose={() => setShowSessionModal(false)}
+        />
+      )}
     <div className="cardContainer">
       <h2>Registro de Garantía</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -120,6 +138,7 @@ function Warranty() {
       </form>
       {message && <p>{message}</p>}
     </div>
+  </>
   );
 }
 

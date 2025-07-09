@@ -1,26 +1,14 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import Login from './components/Login';
-import Register from './components/Register';
-import Warranty from './components/Warranty';
-import EditProfile from './components/EditProfile';
-import ForgotPassword from './components/ForgotPassword';
+import { BrowserRouter } from 'react-router-dom';
+import { SessionProvider } from './SessionContext';
+import AppRoutes from './AppRoutes';
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/warranty" element={<Warranty />} />
-        <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-      </Routes>
+      <SessionProvider>
+        <AppRoutes />
+      </SessionProvider>
     </BrowserRouter>
   );
 }
-
-export default App;

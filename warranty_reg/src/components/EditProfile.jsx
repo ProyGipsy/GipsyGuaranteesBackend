@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
+import { fetchWithAuth } from '../fetchWithAuth';
+import SessionModal from "./SessionModal";
+import { useSessionTimeout } from '../useSessionTimeout';
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -14,11 +17,7 @@ const EditProfile = () => {
       navigate('/login');
       return;
     }
-    fetch('http://localhost:8000/current_user/', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    })
+    fetchWithAuth('http://localhost:8000/current_user/')
       .then(res => res.json())
       .then(data => setUser(data))
       .catch(() => setUser({ firstName: '', lastName: '', email: '', address: '' }));
@@ -37,7 +36,7 @@ const EditProfile = () => {
     setMessage('');
     const token = localStorage.getItem('session_token');
     try {
-      const response = await fetch('http://localhost:8000/edit_profile/', {
+      const response = await fetchWithAuth('http://localhost:8000/edit_profile/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +60,7 @@ const EditProfile = () => {
     setMessage('');
     const token = localStorage.getItem('session_token');
     try {
-      const response = await fetch('http://localhost:8000/changePassword/', {
+      const response = await fetchWithAuth('http://localhost:8000/changePassword/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +84,23 @@ const EditProfile = () => {
     }
   };
 
+  const handleLogout = () => {
+      localStorage.removeItem('session_token');
+      localStorage.removeItem('refresh_token');
+      navigate('/login');
+    };
+
+    const [showSessionModal, setShowSessionModal] = useSessionTimeout(handleLogout);
+
   return (
+    <>
+    {showSessionModal && (
+            <SessionModal
+              onRefresh={() => { window.location.reload(); setShowSessionModal(false); }}
+              onLogout={handleLogout}
+              onClose={() => setShowSessionModal(false)}
+            />
+          )}
     <div className="cardContainer">
     <button
         className="backArrow"
@@ -151,6 +166,7 @@ const EditProfile = () => {
       {message && <p>{message}</p>}
       <button type="submit">Guardar cambios</button>
     </div>
+  </>
   );
 };
 
