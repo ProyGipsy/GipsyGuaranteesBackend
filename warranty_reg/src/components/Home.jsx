@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/styles.css';
 import { fetchWithAuth } from '../fetchWithAuth';
-import { useSessionTimeout } from '../useSessionTimeout';
-import SessionModal from './SessionModal';
+import { useSession } from '../SessionContext';
+import '../styles/styles.css';
 
-const Home = () => {
+export default function Home() {
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { onLogout } = useSession();
   const [user, setUser] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('session_token');
@@ -16,32 +16,15 @@ const Home = () => {
       navigate('/login');
       return;
     }
-    // Fetch user info
     fetchWithAuth('http://localhost:8000/current_user/')
       .then(res => res.json())
-      .then(data => setUser(data))
+      .then(setUser)
       .catch(() => setUser(null));
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('session_token');
-    localStorage.removeItem('refresh_token');
-    navigate('/login');
-  };
-
-  const [showSessionModal, setShowSessionModal] = useSessionTimeout(handleLogout);
-
   return (
-    <>
-      {showSessionModal && (
-        <SessionModal
-          onRefresh={() => { window.location.reload(); setShowSessionModal(false); }}
-          onLogout={handleLogout}
-          onClose={() => setShowSessionModal(false)}
-        />
-      )}
-      <div className="menuContainer">
-        <div className="menuBar">
+    <div className="menuContainer">
+      <div className="menuBar">
           <button className="menuToggle" onClick={() => setMenuOpen(!menuOpen)}>
             &#128100;
           </button>
@@ -66,9 +49,6 @@ const Home = () => {
             )}
           </div>
         </div>
-      </div>
-    </>
+    </div>
   );
 }
-
-export default Home;
