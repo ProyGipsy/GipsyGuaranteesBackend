@@ -31,7 +31,7 @@ export default function Home() {
           {menuOpen && (
             <div className="menuDropdown">
               <button onClick={() => { setMenuOpen(false); navigate('/edit-profile'); }}>Editar perfil</button>
-              <button onClick={handleLogout}>Cerrar sesión</button>
+              <button onClick={onLogout}>Cerrar sesión</button>
             </div>
           )}
         </div>
@@ -42,7 +42,7 @@ export default function Home() {
             <button className="appButton" onClick={() => navigate('/warranty')}>
               Registrar nueva garantía
             </button>
-            {user && user.is_staff && (
+            {user && (user.is_staff || user.is_sudo) && (
               <button className="appButton" onClick={() => navigate('/servicio-tecnico')}>
                 Servicio técnico
               </button>

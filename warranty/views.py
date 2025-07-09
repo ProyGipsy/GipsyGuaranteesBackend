@@ -24,6 +24,7 @@ def current_user(request):
         "lastName": user.last_name,
         "email": user.email,
         "is_staff": user.is_staff,
+        "is_sudo": user.is_superuser,
     })
 
 @csrf_exempt

@@ -2,77 +2,69 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
 import { fetchWithAuth } from '../fetchWithAuth';
-import { useSessionTimeout } from '../useSessionTimeout';
-import SessionModal from './SessionModal';
+import { useSession } from '../SessionContext';
 
-function Warranty() {
-  const [form, setForm] = useState({
+export default function Warranty() {
+  const navigate = useNavigate();
+  const { onLogout } = useSession();
+  const [form, setForm]       = useState({
     barCode: '',
     purchaseDate: '',
     storeName: '',
     storeAddress: '',
     invoiceNumber: null
   });
-  const [message, setMessage] = useState('');
-  const navigate = useNavigate();
 
+  // Redirect if no token present
   useEffect(() => {
-    const token = localStorage.getItem('session_token');
-    if (!token) navigate('/login');
+    if (!localStorage.getItem('session_token')) {
+      navigate('/login');
+    }
   }, [navigate]);
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
+  // Handle form field changes
+  const handleChange = ({ target: { name, value, files } }) => {
     if (name === 'invoiceNumber') {
-      setForm({ ...form, invoiceNumber: files[0] });
+      setForm(f => ({ ...f, invoiceNumber: files[0] }));
     } else {
-      setForm({ ...form, [name]: value });
+      setForm(f => ({ ...f, [name]: value }));
     }
   };
 
-  const handleSubmit = async (e) => {
+  // Submit warranty registration
+  const handleSubmit = async e => {
     e.preventDefault();
-    setMessage('');
+
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => {
       if (value !== null) formData.append(key, value);
     });
+
     try {
-      const response = await fetchWithAuth('http://localhost:8000/registerWarranty/', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('session_token')}`,
-        },
-        body: formData
-      });
+      const response = await fetchWithAuth(
+        'http://localhost:8000/registerWarranty/',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('session_token')}`
+          },
+          body: formData
+        }
+      );
+
       const data = await response.json();
       if (response.ok) {
-        setMessage('¡Garantía guardada exitosamente!');
-        // Optionally reset form or redirect
+        console.log('¡Garantía guardada exitosamente!');
+        // reset form or redirect here if desired
       } else {
-        setMessage(data.message || 'Error al guardar la garantía');
+        console.log(data.message || 'Error al guardar la garantía');
       }
-    } catch (error) {
-      setMessage('Error de conexión con el servidor');
+    } catch {
+      console.log('Error de conexión con el servidor');
     }
-  };  
-
-  const handleLogout = () => {
-    localStorage.removeItem('session_token');
-    localStorage.removeItem('refresh_token');
-    navigate('/login');
   };
-  const [showSessionModal, setShowSessionModal] = useSessionTimeout(handleLogout);
 
   return (
-    <>
-      {showSessionModal && (
-        <SessionModal
-          onRefresh={() => { window.location.reload(); setShowSessionModal(false); }}
-          onLogout={handleLogout}
-          onClose={() => setShowSessionModal(false)}
-        />
-      )}
     <div className="cardContainer">
       <h2>Registro de Garantía</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -85,7 +77,7 @@ function Warranty() {
           value={form.barCode}
           onChange={handleChange}
         />
-        <br /><br />
+
         <label htmlFor="purchaseDate">Fecha de compra:</label>
         <input
           type="date"
@@ -95,7 +87,7 @@ function Warranty() {
           value={form.purchaseDate}
           onChange={handleChange}
         />
-        <br /><br />
+
         <label htmlFor="storeName">Tienda donde compró el producto:</label>
         <select
           id="storeName"
@@ -109,7 +101,7 @@ function Warranty() {
           <option value="StoreB">Opción 2</option>
           <option value="StoreC">Opción 3</option>
         </select>
-        <br /><br />
+
         <label htmlFor="storeAddress">Dirección de la sucursal:</label>
         <select
           id="storeAddress"
@@ -123,7 +115,7 @@ function Warranty() {
           <option value="StoreB">Dirección 2</option>
           <option value="StoreC">Dirección 3</option>
         </select>
-        <br /><br />
+
         <label htmlFor="invoiceNumber">Factura del producto:</label>
         <input
           type="file"
@@ -133,13 +125,9 @@ function Warranty() {
           required
           onChange={handleChange}
         />
-        <br /><br />
+
         <button type="submit">Guardar Garantía</button>
       </form>
-      {message && <p>{message}</p>}
     </div>
-  </>
   );
 }
-
-export default Warranty;
