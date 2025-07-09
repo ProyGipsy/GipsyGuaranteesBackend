@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
+import { fetchWithAuth } from '../fetchWithAuth';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ const ForgotPassword = () => {
     setLoading(true);
     setMessage('');
     try {
-      const response = await fetch('http://localhost:8000/forgotPassword/', {
+      const response = await fetchWithAuth('http://localhost:8000/forgotPassword/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

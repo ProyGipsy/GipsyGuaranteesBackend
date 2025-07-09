@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import * as jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+
 
 export function useSessionTimeout(onLogout, onRefresh) {
   const [showSessionModal, setShowSessionModal] = useState(false);
@@ -9,11 +10,11 @@ export function useSessionTimeout(onLogout, onRefresh) {
       const token = localStorage.getItem('session_token');
       if (!token) return;
       try {
-        
-        const decode = jwt_decode.default || jwt_decode;
-        const { exp } = decode(token);
+        const decode = jwtDecode(token);
+        const { exp } = decode;
         const now = Date.now() / 1000;
-        if (exp - now < 120 && exp - now > 0) {
+
+        if (exp - now < 90 && exp - now > 0) {
           setShowSessionModal(true);
         } else if (exp < now) {
           setShowSessionModal(false);

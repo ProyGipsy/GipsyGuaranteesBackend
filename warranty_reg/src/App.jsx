@@ -11,8 +11,10 @@ import { useSessionTimeout } from './useSessionTimeout';
 
 function AppRoutes() {
   const navigate = useNavigate();
+  
   const handleLogout = useCallback(() => {
     localStorage.removeItem('session_token');
+    localStorage.removeItem('refresh_token');
     navigate('/login');
   }, [navigate]);
 
