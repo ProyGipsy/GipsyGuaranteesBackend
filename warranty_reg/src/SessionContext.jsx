@@ -24,7 +24,6 @@ export function SessionProvider({ children }) {
   const navigate    = useNavigate();
   const refreshRef  = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [toastMsg, setToastMsg]   = useState('');
 
   // -- Logout handler
   const onLogout = useCallback(() => {
@@ -61,15 +60,11 @@ export function SessionProvider({ children }) {
 
       // hide modal + restart timer
       refreshRef.current?.();
-
-      // show success toast
-      setToastMsg('Sesión extendida correctamente');
+      console.log('Sesión extendida correctamente');
     } catch {
-      setToastMsg('Error al extender sesión');
+      console.log('Error al extender sesión');
     } finally {
       setIsLoading(false);
-      // clear toast after 3s
-      setTimeout(() => setToastMsg(''), 3000);
     }
   }, [isLoading, onLogout]);
 
@@ -86,15 +81,8 @@ export function SessionProvider({ children }) {
         onLogout,
         isLoading
       }}
-    >
-      {/* Global toast */}
-      {toastMsg && (
-        <div className="toast-notification">
-          {toastMsg}
-        </div>
-      )}
-
-      {/* Global session-expiry modal */}
+    > 
+    {/* Global session-expiry modal */}
       {showSessionModal && (
         <SessionModal
           onRefresh={onRefresh}
