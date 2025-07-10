@@ -3,12 +3,17 @@ import os
 SECRET_KEY = 'django-insecure-2v#6@!1k8^wz$3r4p7b0gq!9x1z@5l2m8n6v#4s1k0p9q2w3e7'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if os.getenv('DATABASE_URL'):
+    import dj_database_url
+    DATABASES = { 'default': dj_database_url.parse(os.environ['DATABASE_URL']) }
+else:
+    # Default to SQLite for local development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
